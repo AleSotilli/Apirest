@@ -1,0 +1,170 @@
+openapi: "3.0.0"
+info:
+  description: This is the swagger file that goes with our server code
+  version: "1.0.0"
+  title: API First Article
+
+servers:
+  - url: http://localhost:5000/api 
+    description: Development API server
+
+components:
+  schemas:
+    Employee:
+      type: object
+      required:
+        - name
+        - role
+      properties:
+        name:
+          type: string
+          description: Name of employee to create
+        role:
+          type: string
+          description: Role of employee to create
+        id:
+          type: string
+          description: ID Employee
+    EmployeeList:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+          role:
+            type: string
+          id:
+            type: string
+
+paths:
+  /employee:
+    get:
+      operationId: com.example.demo
+      tags:
+        - employee
+      summary: The employee data structure supported by the server application
+      description: Read the list of employee
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Number of employee to get from employee
+          required: false
+        - name: offset
+          in: query
+          schema:
+            type: integer
+          description: Offset from beginning of list where to start gathering employee
+          required: false
+      responses:
+        200:
+          description: Successful read employee list operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeList'
+    post:
+      operationId: PostMapping
+      tags:
+          - employee
+      summary: Create a employee and add it to the employee list
+      description: Create a new employee in the employee list
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              name: employee
+              $ref: '#/components/schemas/Employee'
+      responses:
+        201:
+          description: Employee Created
+          content:
+            text/plain:
+              schema:
+                type: string
+          headers:
+            Location:
+              schema:
+                type: string
+              description: Resource Location
+  /employee/{id}:
+    delete:
+      operationId: DeleteMapping
+      tags:
+        - employee
+      summary: Delete a employee from the employee list
+      description: Delete a employee
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: True
+      responses:
+        200:
+          description: Successfully deleted a employee from employee list
+          content:
+            text/plain:
+              schema:
+                type: string
+    get:
+      operationId: GetMapping
+      tags:
+        - employee
+      summary: Read one employee from the employee list
+      description: Read one employee from the employee list
+      parameters:
+        - name: id
+          in: path
+          required: True
+          description: name of the employee to get from the list
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully read employee from employee list operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        404:
+          description: Employee not found
+          content:
+            text/plain:
+              schema:
+                type: string
+    put:
+      operationId: PutMapping
+      tags:
+        - employee
+      summary: Update a employee in the employee list
+      description: Update a employee in the employee list
+      parameters:
+        - name: id
+          in: path
+          required: True
+          description: Name of the employee to update in the list
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        200:
+          description: Successfully updated employee in employee list
+          content:
+            text/plain:
+              schema:
+                type: string
+        404:
+          description: Employee not found in employee list
+          content:
+            text/plain:
+              schema:
+                type: string
